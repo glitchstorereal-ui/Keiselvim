@@ -1,7 +1,7 @@
 --[[
     ╔══════════════════════════════════════════════════════════════════════╗
-    ║           KEI SELVIM — COORDINATE ZONE FARMER v19.0 ALL MAPP BISA GW WAKK               ║
-    ║           Custom Safe Zone • Farm Zones • Manual Teleports           ║
+    ║           KEI SELVIM — COORDINATE ZONE FARMER v19.1 (ZONA 10)        ║
+    ║           Custom Safe Zone • Farm Zones 1-10 • Manual Teleports      ║
     ╚══════════════════════════════════════════════════════════════════════╝
 ]]
 
@@ -20,15 +20,17 @@ local LocalPlayer = Players.LocalPlayer
 local COORDS = {
     SafeZone = Vector3.new(-44.95, 4.37, 6.81),
     FarmZones = {
-        { name = "Zona 1", pos = Vector3.new(708.38, 71.53, -334.12) },
-        { name = "Zona 2", pos = Vector3.new(858.88, 71.53, -410.04) },
-        { name = "Zona 3", pos = Vector3.new(1039.63, 71.53, -347.66) },
-        { name = "Zona 4", pos = Vector3.new(1294.86, 71.53, -408.31) },
-        { name = "Zona 5", pos = Vector3.new(1608.88, 71.53, -352.23) },
-        { name = "Zona 6", pos = Vector3.new(1997.18, 71.53, -380.27) },
-        { name = "Zona 7", pos = Vector3.new(2398.09, 71.53, -370.36) },
-        { name = "Zona 8", pos = Vector3.new(2833.26, 71.53, -382.73) },
-        { name = "Zona 9", pos = Vector3.new(3504.75, 71.53, -400.05) },
+        { name = "Zona 1", pos = Vector3.new(76.11, 4.37, 69.31) },
+        { name = "Zona 2", pos = Vector3.new(341.88, 4.37, -75.33) },
+        { name = "Zona 3", pos = Vector3.new(627.66, 4.37, 79.85) },
+        { name = "Zona 4", pos = Vector3.new(1605.16, 4.37, -72.00) },
+        { name = "Zona 5", pos = Vector3.new(1995.34, 4.37, 68.48) },
+        { name = "Zona 6", pos = Vector3.new(2496.97, 4.37, -58.09) },
+        { name = "Zona 7", pos = Vector3.new(3136.20, 4.37, 63.97) },
+        { name = "Zona 8", pos = Vector3.new(3824.98, 4.37, -70.62) },
+        { name = "Zona 9", pos = Vector3.new(4583.95, 4.37, 58.67) },
+        -- ⚠️ GANTI ANGKA DI BAWAH INI DENGAN KOORDINAT ZONA 10 YANG ASLI
+        { name = "Zona 10", pos = Vector3.new(6337.60, 5.97, -0.74) }, 
     }
 }
 
@@ -171,14 +173,14 @@ end
 local function buildUI()
     local gui = create("ScreenGui", { Name = "ZoneFarmerUI", ResetOnSpawn = false, Parent = CoreGui })
     
-    -- Frame Utama diperbesar buat nampung tombol teleport
-    local main = create("Frame", { Size = UDim2.new(0, 320, 0, 450), Position = UDim2.new(0.5, -160, 0.5, -225), BackgroundColor3 = C.BG, BorderSizePixel = 0, Parent = gui })
+    -- Frame Utama (Tinggi ditambah dikit biar Zona 10 muat)
+    local main = create("Frame", { Size = UDim2.new(0, 320, 0, 470), Position = UDim2.new(0.5, -160, 0.5, -235), BackgroundColor3 = C.BG, BorderSizePixel = 0, Parent = gui })
     addCorner(main, 10); addStroke(main, C.BORDER)
 
     -- Header
     local header = create("Frame", { Size = UDim2.new(1, 0, 0, 40), BackgroundColor3 = C.PANEL, BorderSizePixel = 0, Parent = main })
     addCorner(header, 10)
-    create("TextLabel", { Size = UDim2.new(1, -40, 1, 0), Position = UDim2.new(0, 15, 0, 0), BackgroundTransparency = 1, Text = "KEI SELVIM (V19)", TextColor3 = C.TEXT, Font = Enum.Font.GothamBold, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left, Parent = header })
+    create("TextLabel", { Size = UDim2.new(1, -40, 1, 0), Position = UDim2.new(0, 15, 0, 0), BackgroundTransparency = 1, Text = "KEI SELVIM (V19.1)", TextColor3 = C.TEXT, Font = Enum.Font.GothamBold, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left, Parent = header })
     
     local closeBtn = create("TextButton", { Size = UDim2.new(0, 24, 0, 24), Position = UDim2.new(1, -32, 0, 8), BackgroundColor3 = C.RED, Text = "✕", TextColor3 = C.TEXT, Font = Enum.Font.GothamBold, TextSize = 12, BorderSizePixel = 0, Parent = header })
     addCorner(closeBtn, 6)
@@ -233,10 +235,11 @@ local function buildUI()
     create("TextLabel", { Size = UDim2.new(1, -20, 0, 20), Position = UDim2.new(0, 10, 0, 185), BackgroundTransparency = 1, Text = "Target Auto Farm:", TextColor3 = C.DIM, Font = Enum.Font.Gotham, TextSize = 11, TextXAlignment = Enum.TextXAlignment.Left, Parent = main })
 
     local zonaContainer = create("Frame", { Size = UDim2.new(1, -20, 0, 55), Position = UDim2.new(0, 10, 0, 205), BackgroundTransparency = 1, Parent = main })
-    create("UIGridLayout", { CellSize = UDim2.new(0.11, -2, 0, 24), CellPadding = UDim2.new(0, 2, 0, 5), Parent = zonaContainer })
+    -- Ubah CellSize biar muat 10 kotak (jadi lebih kecil)
+    create("UIGridLayout", { CellSize = UDim2.new(0.09, -2, 0, 24), CellPadding = UDim2.new(0, 2, 0, 5), Parent = zonaContainer })
 
-    for i = 1, 9 do
-        local zBtn = create("TextButton", { BackgroundColor3 = (i == 1) and C.ACCENT or C.BOX, Text = tostring(i), TextColor3 = C.TEXT, Font = Enum.Font.GothamBold, TextSize = 11, BorderSizePixel = 0, Parent = zonaContainer })
+    for i = 1, 10 do
+        local zBtn = create("TextButton", { BackgroundColor3 = (i == 1) and C.ACCENT or C.BOX, Text = tostring(i), TextColor3 = C.TEXT, Font = Enum.Font.GothamBold, TextSize = 10, BorderSizePixel = 0, Parent = zonaContainer })
         addCorner(zBtn, 4); addStroke(zBtn, C.BORDER)
         
         zBtn.MouseButton1Click:Connect(function()
@@ -261,8 +264,9 @@ local function buildUI()
         end
     end)
 
-    -- Tombol Zona 1-9 (Grid 3x3)
-    local tpContainer = create("Frame", { Size = UDim2.new(1, -20, 0, 85), Position = UDim2.new(0, 10, 0, 335), BackgroundTransparency = 1, Parent = main })
+    -- Tombol Zona 1-10 (Grid)
+    local tpContainer = create("Frame", { Size = UDim2.new(1, -20, 0, 110), Position = UDim2.new(0, 10, 0, 335), BackgroundTransparency = 1, Parent = main })
+    -- Ubah CellSize biar 10 kotak muat rapi (4 baris)
     create("UIGridLayout", { CellSize = UDim2.new(0.33, -4, 0, 25), CellPadding = UDim2.new(0, 4, 0, 5), Parent = tpContainer })
 
     for i, zone in ipairs(COORDS.FarmZones) do
